@@ -1,9 +1,21 @@
 import React from "react";
-import { Form } from "antd";
+import { Form, message } from "antd";
 import { Link } from "react-router-dom";
+import { login } from "../../../api/user";
 const Login = () => {
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log(values);
+    try {
+      const response = await login(values);
+      if (response.success) {
+        message.success(response.message);
+        localStorage.setItem("token", response.data);
+      } else {
+        message.error(response.error);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
   };
   return (
     <div className="flex justify-center items-center h-screen w-screen">

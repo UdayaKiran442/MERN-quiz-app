@@ -6,13 +6,13 @@ const bcrypt = require("bcrypt");
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const userExists = User.findOne({ email });
-    // if (userExists) {
-    //   return res.json(400, {
-    //     error: "User with this email already exists",
-    //     success: false,
-    //   });
-    // }
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.json(400, {
+        error: "User with this email already exists",
+        success: false,
+      });
+    }
     const newUser = new User({
       name,
       email,

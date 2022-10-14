@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
-
+const jwt = require("jsonwebtoken");
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -23,6 +23,38 @@ router.post("/register", async (req, res) => {
       newUser,
       message: "Account created successfully!Login to continue",
       success: true,
+    });
+  } catch (error) {
+    return res.json(500, {
+      error: error.message,
+      success: false,
+    });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json(400, {
+        error: "Invalid email/password",
+      });
+    }
+    const isMatched = await user.comparePassword(password);
+    if (!isMatched) {
+      return res.json(400, {
+        error: "Invalid email/password",
+        success: false,
+      });
+    }
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    return res.json(200, {
+      message: "Login successful",
+      success: true,
+      data: token,
     });
   } catch (error) {
     return res.json(500, {

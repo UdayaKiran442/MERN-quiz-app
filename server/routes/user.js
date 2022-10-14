@@ -19,8 +19,9 @@ router.post("/register", async (req, res) => {
       password,
     });
     await newUser.save();
-    return res.json(200, {
+    return res.status(200).json({
       newUser,
+      message: "Account created successfully!Login to continue",
       success: true,
     });
   } catch (error) {

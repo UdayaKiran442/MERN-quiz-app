@@ -1,8 +1,24 @@
 import React from "react";
-import { Form } from "antd";
+import { Form, message } from "antd";
 import { Link } from "react-router-dom";
+import { register } from "../../../api/user";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
-  const onFinish = () => {};
+  const navigate = useNavigate();
+  const onFinish = async (values) => {
+    try {
+      console.log(values);
+      const response = await register(values);
+      if (response.success) {
+        message.success(response.message);
+        navigate("/login");
+      } else {
+        message.error(response.error);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <div className="card w-400 p-3">

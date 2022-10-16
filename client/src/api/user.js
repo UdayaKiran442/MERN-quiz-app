@@ -17,3 +17,12 @@ export const login = async (payload) => {
     return error.response.data;
   }
 };
+
+export const getUserInfo = async () => {
+  try {
+    const response = await apiInstance.get("/users/get-user-info");
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

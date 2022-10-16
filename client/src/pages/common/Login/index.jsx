@@ -1,8 +1,9 @@
 import React from "react";
 import { Form, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../../api/user";
 const Login = () => {
+  const navigate = useNavigate();
   const onFinish = async (values) => {
     console.log(values);
     try {
@@ -10,6 +11,7 @@ const Login = () => {
       if (response.success) {
         message.success(response.message);
         localStorage.setItem("token", response.data);
+        navigate("/");
       } else {
         message.error(response.error);
       }

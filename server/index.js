@@ -10,6 +10,7 @@ db.once("open", () => console.log("Connected to database"));
 app.use(express.json());
 app.use(cors());
 app.use("/api/users", require("./routes/user"));
+app.use("/api/exams", require("./routes/exam"));
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log("Server listening on port", port);

@@ -10,6 +10,7 @@ import Register from "./pages/common/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/common/Home";
 import Exams from "./pages/admin/Exams/index";
+import AddEditExam from "./pages/admin/Exams/AddEditExam";
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
           path="/admin/exams/add"
           element={
             <ProtectedRoute>
-              <Exams />
+              <AddEditExam />
             </ProtectedRoute>
           }
         />
@@ -47,7 +48,7 @@ function App() {
           path="/admin/exams/edit/:id"
           element={
             <ProtectedRoute>
-              <Exams />
+              <AddEditExam />
             </ProtectedRoute>
           }
         />

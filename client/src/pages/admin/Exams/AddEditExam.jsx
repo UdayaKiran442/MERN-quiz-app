@@ -3,18 +3,24 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { addExam } from "../../../api/exam";
 import PageTitle from "../../../components/PageTitle";
+import { useDispatch } from "react-redux";
+import { hideLoading, showLoading } from "../../../redux/loaderSlice";
 
 const AddEditExam = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const onFinish = async (values) => {
     console.log(values);
     try {
+      dispatch(showLoading());
       let response = await addExam(values);
+      dispatch(hideLoading());
       if (response.success) {
         message.success(response.message);
         navigate("/admin/exams");
         console.log("Add Exam response:", response);
       } else {
+        dispatch(hideLoading());
         message.error(response.error);
       }
     } catch (error) {}

@@ -4,6 +4,7 @@ import { getUserInfo } from "../api/user";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
+import { hideLoading, showLoading } from "../redux/loaderSlice";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useSelector((state) => state.user);
@@ -78,7 +79,9 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const getUserData = async () => {
       try {
+        dispatch(showLoading());
         const response = await getUserInfo();
+        dispatch(hideLoading());
         if (response.success) {
           //   message.success(response.message);
           dispatch(setUser(response.data));

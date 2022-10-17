@@ -12,3 +12,6 @@ code {
     monospace;
 }
 
+.material-symbols-outlined{
+  cursor: pointer;
+}

@@ -20,4 +20,48 @@ router.post("/add", authMiddleware, async (req, res) => {
     });
   }
 });
+router.get("/get-all-exams", authMiddleware, async (req, res) => {
+  try {
+    const exams = await Exam.find({});
+    if (!exams) {
+      return res.json(404, {
+        error: "No exams found",
+        success: false,
+      });
+    }
+    return res.json(200, {
+      success: true,
+      data: exams,
+      message: "Exams fetched successfully",
+    });
+  } catch (error) {
+    return res.json(500, {
+      message: "Internal server error",
+      success: false,
+      error: error.message,
+    });
+  }
+});
+router.get("/get-exam-by-id", authMiddleware, async (req, res) => {
+  try {
+    const exam = await Exam.find(req.body.examId);
+    if (!exam) {
+      return res.json(404, {
+        error: "Exam not found",
+        success: false,
+      });
+    }
+    return res.json(200, {
+      success: true,
+      data: exam,
+      message: "Exam fetched successfully",
+    });
+  } catch (error) {
+    return res.json(500, {
+      message: "Internal server error",
+      success: false,
+      error: error.message,
+    });
+  }
+});
 module.exports = router;

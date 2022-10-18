@@ -43,7 +43,7 @@ router.get("/get-all-exams", authMiddleware, async (req, res) => {
     });
   }
 });
-router.get("/get-exam-by-id/:id", async (req, res) => {
+router.get("/get-exam-by-id/:id", authMiddleware, async (req, res) => {
   try {
     const exam = await Exam.findById(req.params.id);
     if (!exam) {
@@ -66,7 +66,7 @@ router.get("/get-exam-by-id/:id", async (req, res) => {
   }
 });
 
-router.post("/edit/:id", async (req, res) => {
+router.post("/edit/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const exam = await Exam.findByIdAndUpdate(id, req.body);
@@ -88,7 +88,7 @@ router.post("/edit/:id", async (req, res) => {
   }
 });
 
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const exam = await Exam.findById(id);

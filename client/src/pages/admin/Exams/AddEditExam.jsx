@@ -6,28 +6,30 @@ import PageTitle from "../../../components/PageTitle";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../../redux/loaderSlice";
 import TabPane from "antd/lib/tabs/TabPane";
+import QuestionModal from "./QuestionModal";
 
 const AddEditExam = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
   const [examData, setExamData] = useState(null);
-  useEffect(() => {
-    const getExamData = async () => {
-      try {
-        dispatch(showLoading());
-        const response = await getExamById(params.id);
-        dispatch(hideLoading());
-        if (response.success) {
-          setExamData(response.data);
-        } else {
-          message.error(response.error);
-        }
-      } catch (error) {
-        dispatch(hideLoading());
-        message.error(error.message);
+  const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const getExamData = async () => {
+    try {
+      dispatch(showLoading());
+      const response = await getExamById(params.id);
+      dispatch(hideLoading());
+      if (response.success) {
+        setExamData(response.data);
+      } else {
+        message.error(response.error);
       }
-    };
+    } catch (error) {
+      dispatch(hideLoading());
+      message.error(error.message);
+    }
+  };
+  useEffect(() => {
     if (params.id) getExamData();
   }, []);
   const onFinish = async (values) => {
@@ -104,12 +106,28 @@ const AddEditExam = () => {
             {params.id && (
               <TabPane tab="Exam Questions" key="2">
                 <div className="flex justify-end">
-                  <button className="primary-outlined-btn">Add Question</button>
+                  <button
+                    type="button"
+                    className="primary-outlined-btn"
+                    onClick={() => {
+                      setShowQuestionModal(true);
+                    }}
+                  >
+                    Add Question
+                  </button>
                 </div>
               </TabPane>
             )}
           </Tabs>
         </Form>
+      )}
+      {showQuestionModal && (
+        <QuestionModal
+          setShowQuestionModal={setShowQuestionModal}
+          showQuestionModal={showQuestionModal}
+          examId={params.id}
+          refreshData={getExamData}
+        />
       )}
     </div>
   );

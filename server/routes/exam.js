@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Exam = require("../model/exam");
+const Question = require("../model/question");
 const authMiddleware = require("../middlewares/authMiddleware");
-const { findById } = require("../model/exam");
 router.post("/add", authMiddleware, async (req, res) => {
   try {
     req.body.questions = [];
@@ -101,6 +101,85 @@ router.delete("/delete/:id", authMiddleware, async (req, res) => {
     exam.remove();
     return res.json(200, {
       message: "Exam deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.json(500, {
+      error: error.message,
+      success: false,
+    });
+  }
+});
+
+router.post("/add-question", authMiddleware, async (req, res) => {
+  try {
+    const newQuestion = new Question(req.body);
+    await newQuestion.save();
+    const exam = await Exam.findById(req.body.exam);
+    if (!exam) {
+      return res.json(404, {
+        error: "Exam not found",
+        success: false,
+      });
+    }
+    exam.questions.push(newQuestion._id);
+    await exam.save();
+    return res.json(200, {
+      message: "Question added successfully",
+      success: true,
+      data: newQuestion,
+    });
+  } catch (error) {
+    return res.json(500, {
+      error: error.message,
+      success: false,
+    });
+  }
+});
+
+router.post("/edit-question-in-exam/:id", authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const question = await Question.findByIdAndUpdate(id, req.body);
+    if (!question) {
+      return res.json(404, {
+        error: "Question not found",
+        success: false,
+      });
+    }
+    return res.json(200, {
+      message: "Question edited successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.json(500, {
+      error: error.message,
+      success: false,
+    });
+  }
+});
+
+router.delete("/delete-question/:id", authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const question = await Question.findByIdAndDelete(id);
+    if (!question) {
+      return res.json(404, {
+        error: "Question not found",
+        success: false,
+      });
+    }
+    const exam = await Exam.findById(req.body.examId);
+    if (!exam) {
+      return res.json(404, {
+        error: "Exam not found",
+        success: false,
+      });
+    }
+    exam.questions = exam.questions.filter((question) => question._id !== id);
+    await exam.save();
+    return res.json(200, {
+      message: "Question deleted successfully",
       success: true,
     });
   } catch (error) {

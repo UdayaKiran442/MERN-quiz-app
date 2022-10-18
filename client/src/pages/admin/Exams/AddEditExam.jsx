@@ -60,51 +60,55 @@ const AddEditExam = () => {
       {(examData || !params.id) && (
         <Form layout="vertical" onFinish={onFinish} initialValues={examData}>
           <Tabs defaultActiveKey="1">
-            <TabPane tab="Exam Details" key="1"></TabPane>
+            <TabPane tab="Exam Details" key="1">
+              <Row gutter={[10, 10]}>
+                <Col span={8}>
+                  <Form.Item label="Exam Name" name="name">
+                    <input type="text" />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Exam Duration" name="duration">
+                    <input type="number" />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Category" name="category">
+                    <select name="" id="">
+                      <option value="">Select Category</option>
+                      <option value="javascript">JavaScript(ES 6)</option>
+                      <option value="node">Node</option>
+                      <option value="react">React</option>
+                      <option value="mongo">Mongo</option>
+                    </select>
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Total Marks" name="totalMarks">
+                    <input type="number" />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item label="Passing Marks" name="passingMarks">
+                    <input type="number" />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <div className="flex justify-end ">
+                <button className="primary-contained-btn" type="submit">
+                  Save
+                </button>
+              </div>
+            </TabPane>
             {params.id && (
               <TabPane tab="Exam Questions" key="2">
-                <h1>Question</h1>
+                <div className="flex justify-end">
+                  <button className="primary-outlined-btn">Add Question</button>
+                </div>
               </TabPane>
             )}
           </Tabs>
-          <Row gutter={[10, 10]}>
-            <Col span={8}>
-              <Form.Item label="Exam Name" name="name">
-                <input type="text" />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item label="Exam Duration" name="duration">
-                <input type="number" />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item label="Category" name="category">
-                <select name="" id="">
-                  <option value="">Select Category</option>
-                  <option value="javascript">JavaScript(ES 6)</option>
-                  <option value="node">Node</option>
-                  <option value="react">React</option>
-                  <option value="mongo">Mongo</option>
-                </select>
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item label="Total Marks" name="totalMarks">
-                <input type="number" />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item label="Passing Marks" name="passingMarks">
-                <input type="number" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <div className="flex justify-end ">
-            <button className="primary-contained-btn" type="submit">
-              Save
-            </button>
-          </div>
         </Form>
       )}
     </div>

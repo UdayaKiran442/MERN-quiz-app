@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Exam = require("../model/exam");
 const authMiddleware = require("../middlewares/authMiddleware");
+const { findById } = require("../model/exam");
 router.post("/add", authMiddleware, async (req, res) => {
   try {
     req.body.questions = [];
@@ -77,6 +78,29 @@ router.post("/edit/:id", async (req, res) => {
     }
     return res.json(200, {
       message: "Exam edited successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.json(500, {
+      error: error.message,
+      success: false,
+    });
+  }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const exam = await Exam.findById(id);
+    if (!exam) {
+      return res.json(404, {
+        success: false,
+        error: "Exam not found",
+      });
+    }
+    exam.remove();
+    return res.json(200, {
+      message: "Exam deleted successfully",
       success: true,
     });
   } catch (error) {

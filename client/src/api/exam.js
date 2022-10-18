@@ -35,3 +35,12 @@ export const editExamById = async (id, payload) => {
     return error.response.data;
   }
 };
+
+export const deleteExamById = async (id) => {
+  try {
+    const response = await apiInstance.delete(`/exams/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { message, Table } from "antd";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../../redux/loaderSlice";
-import { getAllExams } from "../../../api/exam";
+import { deleteExamById, getAllExams } from "../../../api/exam";
 
 const Exams = () => {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const Exams = () => {
           <span
             className="material-symbols-outlined"
             onClick={() => {
-              navigate(`/admin/exams/delete/${record._id}`);
+              deleteExam(record._id);
             }}
           >
             delete
@@ -56,6 +56,23 @@ const Exams = () => {
       ),
     },
   ];
+  const deleteExam = async (id) => {
+    try {
+      dispatch(showLoading());
+      const response = await deleteExamById(id);
+      window.location.reload(true);
+      dispatch(hideLoading());
+      if (response.success) {
+        message.success(response.message);
+      } else {
+        message.error(response.error);
+      }
+    } catch (error) {
+      dispatch(hideLoading());
+      message.error(error.message);
+    }
+  };
+
   const getExamsData = async () => {
     try {
       dispatch(showLoading());

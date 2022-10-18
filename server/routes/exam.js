@@ -45,7 +45,7 @@ router.get("/get-all-exams", authMiddleware, async (req, res) => {
 });
 router.get("/get-exam-by-id/:id", authMiddleware, async (req, res) => {
   try {
-    const exam = await Exam.findById(req.params.id);
+    const exam = await Exam.findById(req.params.id).populate("questions");
     if (!exam) {
       return res.json(404, {
         error: "Exam not found",

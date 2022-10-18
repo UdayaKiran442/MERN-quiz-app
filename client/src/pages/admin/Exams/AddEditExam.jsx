@@ -1,4 +1,4 @@
-import { Col, Form, message, Row, Select, Tabs } from "antd";
+import { Col, Form, message, Row, Select, Table, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { addExam, editExamById, getExamById } from "../../../api/exam";
@@ -14,6 +14,7 @@ const AddEditExam = () => {
   const params = useParams();
   const [examData, setExamData] = useState(null);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
   const getExamData = async () => {
     try {
       dispatch(showLoading());
@@ -52,6 +53,54 @@ const AddEditExam = () => {
       }
     } catch (error) {}
   };
+  const questionsColumns = [
+    {
+      title: "Question",
+      dataIndex: "name",
+    },
+    {
+      title: "Options",
+      dataIndex: "options",
+      render: (text, record) => {
+        return Object.keys(record.options).map((key) => {
+          return (
+            <div>
+              {key}:{record.options[key]}
+            </div>
+          );
+        });
+      },
+    },
+    {
+      title: "Correct Option",
+      dataIndex: "correctOption",
+      render: (text, record) => {
+        return `${record.correctOption}:${
+          record.options[record.correctOption]
+        }`;
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: (text, record) => (
+        <div className="flex gap-2">
+          <span
+            className="material-symbols-outlined"
+            onClick={() => {
+              setSelectedQuestion(record);
+              setShowQuestionModal(true);
+            }}
+          >
+            edit
+          </span>
+          <span className="material-symbols-outlined" onClick={() => {}}>
+            delete
+          </span>
+        </div>
+      ),
+    },
+  ];
   return (
     <div>
       {params.id ? (
@@ -116,6 +165,10 @@ const AddEditExam = () => {
                     Add Question
                   </button>
                 </div>
+                <Table
+                  columns={questionsColumns}
+                  dataSource={examData?.questions}
+                ></Table>
               </TabPane>
             )}
           </Tabs>

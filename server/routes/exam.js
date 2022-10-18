@@ -65,7 +65,7 @@ router.get("/get-exam-by-id/:id", async (req, res) => {
   }
 });
 
-router.put("/edit/:id", async (req, res) => {
+router.post("/edit/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const exam = await Exam.findByIdAndUpdate(id, req.body);

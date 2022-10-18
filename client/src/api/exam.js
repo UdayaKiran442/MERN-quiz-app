@@ -26,3 +26,12 @@ export const getExamById = async (id) => {
     return error.response.data;
   }
 };
+
+export const editExamById = async (id, payload) => {
+  try {
+    const response = await apiInstance.post(`/exams/edit/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

@@ -1,7 +1,7 @@
 import { Col, Form, message, Row, Select, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { addExam, getExamById } from "../../../api/exam";
+import { addExam, editExamById, getExamById } from "../../../api/exam";
 import PageTitle from "../../../components/PageTitle";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../../redux/loaderSlice";
@@ -33,13 +33,17 @@ const AddEditExam = () => {
   const onFinish = async (values) => {
     console.log(values);
     try {
+      let response;
       dispatch(showLoading());
-      let response = await addExam(values);
+      if (params.id) {
+        response = await editExamById(params.id, values);
+      } else {
+        response = await addExam(values);
+      }
       dispatch(hideLoading());
       if (response.success) {
         message.success(response.message);
         navigate("/admin/exams");
-        console.log("Add Exam response:", response);
       } else {
         dispatch(hideLoading());
         message.error(response.error);

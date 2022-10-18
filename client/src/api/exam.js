@@ -18,9 +18,9 @@ export const getAllExams = async () => {
   }
 };
 
-export const getExamById = async (payload) => {
+export const getExamById = async (id) => {
   try {
-    const response = await apiInstance.get("/exams/get-exam-by-id", payload);
+    const response = await apiInstance.get(`/exams/get-exam-by-id/${id}`);
     return response.data;
   } catch (error) {
     return error.response.data;

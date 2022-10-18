@@ -42,9 +42,9 @@ router.get("/get-all-exams", authMiddleware, async (req, res) => {
     });
   }
 });
-router.get("/get-exam-by-id", authMiddleware, async (req, res) => {
+router.get("/get-exam-by-id/:id", async (req, res) => {
   try {
-    const exam = await Exam.find(req.body.examId);
+    const exam = await Exam.findById(req.params.id);
     if (!exam) {
       return res.json(404, {
         error: "Exam not found",

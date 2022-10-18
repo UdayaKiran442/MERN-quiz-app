@@ -64,4 +64,27 @@ router.get("/get-exam-by-id/:id", async (req, res) => {
     });
   }
 });
+
+router.put("/edit/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const exam = await Exam.findByIdAndUpdate(id, req.body);
+    if (!exam) {
+      return res.json(404, {
+        success: false,
+        error: "Exam not found",
+      });
+    }
+    return res.json(200, {
+      message: "Exam edited successfully",
+      success: true,
+    });
+  } catch (error) {
+    return res.json(500, {
+      error: error.message,
+      success: false,
+    });
+  }
+});
+
 module.exports = router;

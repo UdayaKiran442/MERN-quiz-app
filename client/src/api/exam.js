@@ -44,3 +44,12 @@ export const deleteExamById = async (id) => {
     return error.response.data;
   }
 };
+
+export const addQuestion = async (payload) => {
+  try {
+    const response = await apiInstance.post("/exams/add-question", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

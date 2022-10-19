@@ -97,7 +97,8 @@ const ProtectedRoute = ({ children }) => {
         message.error(error.message);
       }
     };
-    getUserData();
+    if (localStorage.getItem("token")) getUserData();
+    else navigate("/login");
   }, []);
   //   const activeRoute = window.location.pathname;
   return (

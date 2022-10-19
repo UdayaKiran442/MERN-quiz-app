@@ -1,6 +1,6 @@
 import { Form, message, Modal } from "antd";
 import React from "react";
-import { addQuestion } from "../../../api/exam";
+import { addQuestion, editQuestionById } from "../../../api/exam";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../../redux/loaderSlice";
 
@@ -9,6 +9,8 @@ const QuestionModal = ({
   showQuestionModal,
   examId,
   refreshData,
+  selectedQuestion,
+  setSelectedQuestion,
 }) => {
   const dispatch = useDispatch();
   const onFinish = async (values) => {
@@ -26,7 +28,12 @@ const QuestionModal = ({
         exam: examId,
       };
       dispatch(showLoading());
-      const response = await addQuestion(requiredPayload);
+      let response;
+      if (selectedQuestion) {
+        response = await editQuestionById(examId, { ...requiredPayload });
+      } else {
+        response = await addQuestion(requiredPayload);
+      }
       if (response.success) {
         dispatch(hideLoading());
         message.success(response.message);
@@ -36,6 +43,7 @@ const QuestionModal = ({
         dispatch(hideLoading());
         message.error(response.error);
       }
+      setSelectedQuestion(null);
     } catch (error) {
       dispatch(hideLoading());
       message.error(error.message);
@@ -44,12 +52,26 @@ const QuestionModal = ({
   return (
     <div>
       <Modal
-        title="Add question"
+        title={selectedQuestion ? "Edit Question" : "Add Question"}
         open={showQuestionModal}
         footer={false}
-        onCancel={() => setShowQuestionModal(false)}
+        onCancel={() => {
+          setShowQuestionModal(false);
+          setSelectedQuestion(null);
+        }}
       >
-        <Form onFinish={onFinish} layout={"vertical"}>
+        <Form
+          onFinish={onFinish}
+          layout={"vertical"}
+          initialValues={{
+            name: selectedQuestion?.name,
+            A: selectedQuestion?.options?.A,
+            B: selectedQuestion?.options?.B,
+            C: selectedQuestion?.options?.C,
+            D: selectedQuestion?.options?.D,
+            correctOption: selectedQuestion?.correctOption,
+          }}
+        >
           <Form.Item name="name" label="Question">
             <input type="text" />
           </Form.Item>

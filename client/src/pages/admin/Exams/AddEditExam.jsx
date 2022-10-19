@@ -180,6 +180,8 @@ const AddEditExam = () => {
           showQuestionModal={showQuestionModal}
           examId={params.id}
           refreshData={getExamData}
+          selectedQuestion={selectedQuestion}
+          setSelectedQuestion={setSelectedQuestion}
         />
       )}
     </div>

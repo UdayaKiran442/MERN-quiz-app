@@ -53,3 +53,15 @@ export const addQuestion = async (payload) => {
     return error.response.data;
   }
 };
+
+export const editQuestionById = async (id, payload) => {
+  try {
+    const response = await apiInstance.post(
+      `/exams/edit-question-in-exam/${id}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

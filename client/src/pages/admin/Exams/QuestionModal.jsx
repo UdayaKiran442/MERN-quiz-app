@@ -34,7 +34,9 @@ const QuestionModal = ({
       dispatch(showLoading());
       let response;
       if (selectedQuestion) {
-        response = await editQuestionById(examId, { ...requiredPayload });
+        response = await editQuestionById(selectedQuestion._id, {
+          ...requiredPayload,
+        });
       } else {
         response = await addQuestion(requiredPayload);
       }

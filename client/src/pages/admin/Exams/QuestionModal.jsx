@@ -1,6 +1,10 @@
 import { Form, message, Modal } from "antd";
 import React from "react";
-import { addQuestion, editQuestionById } from "../../../api/exam";
+import {
+  addQuestion,
+  deleteQuestionById,
+  editQuestionById,
+} from "../../../api/exam";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../../redux/loaderSlice";
 

@@ -1,7 +1,12 @@
 import { Col, Form, message, Row, Select, Table, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { addExam, editExamById, getExamById } from "../../../api/exam";
+import {
+  addExam,
+  deleteQuestionById,
+  editExamById,
+  getExamById,
+} from "../../../api/exam";
 import PageTitle from "../../../components/PageTitle";
 import { useDispatch } from "react-redux";
 import { hideLoading, showLoading } from "../../../redux/loaderSlice";
@@ -53,6 +58,19 @@ const AddEditExam = () => {
       }
     } catch (error) {}
   };
+  const deleteQuestion = async (questionId) => {
+    try {
+      const resposne = await deleteQuestionById(questionId, {
+        examId: params.id,
+      });
+      if (resposne.success) {
+        message.success(resposne.message);
+        window.location.reload(true);
+      } else {
+        message.error(resposne.error);
+      }
+    } catch (error) {}
+  };
   const questionsColumns = [
     {
       title: "Question",
@@ -94,7 +112,12 @@ const AddEditExam = () => {
           >
             edit
           </span>
-          <span className="material-symbols-outlined" onClick={() => {}}>
+          <span
+            className="material-symbols-outlined"
+            onClick={() => {
+              deleteQuestion(record._id);
+            }}
+          >
             delete
           </span>
         </div>

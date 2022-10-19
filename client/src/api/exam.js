@@ -65,3 +65,15 @@ export const editQuestionById = async (id, payload) => {
     return error.response.data;
   }
 };
+
+export const deleteQuestionById = async (id, payload) => {
+  try {
+    const response = await apiInstance.post(
+      `/exams/delete-question/${id}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

@@ -159,16 +159,9 @@ router.post("/edit-question-in-exam/:id", authMiddleware, async (req, res) => {
   }
 });
 
-router.delete("/delete-question/:id", authMiddleware, async (req, res) => {
+router.post("/delete-question/:id", authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const question = await Question.findByIdAndDelete(id);
-    if (!question) {
-      return res.json(404, {
-        error: "Question not found",
-        success: false,
-      });
-    }
     const exam = await Exam.findById(req.body.examId);
     if (!exam) {
       return res.json(404, {
@@ -176,6 +169,14 @@ router.delete("/delete-question/:id", authMiddleware, async (req, res) => {
         success: false,
       });
     }
+    const question = await Question.findByIdAndDelete(id);
+    if (!question) {
+      return res.json(404, {
+        error: "Question not found",
+        success: false,
+      });
+    }
+
     exam.questions = exam.questions.filter((question) => question._id !== id);
     await exam.save();
     return res.json(200, {

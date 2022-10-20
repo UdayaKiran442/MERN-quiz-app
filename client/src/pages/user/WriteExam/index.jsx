@@ -12,7 +12,10 @@ const WriteExam = () => {
   const [questions = [], setQuestions] = useState([]);
   const [selectedQuesitonIndex, setSeletedQuesitonIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState({});
+  const [secondsLeft, setSecondsLeft] = useState(0);
+  const [timeUp, setTimeUp] = useState(false);
   const [result, setResult] = useState({});
+  const [intervalId, setIntervalId] = useState(null);
   const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
@@ -24,6 +27,7 @@ const WriteExam = () => {
       if (response.success) {
         setExamData(response.data);
         setQuestions(response.data.questions);
+        setSecondsLeft(response.data.duration);
       } else {
         message.error(response.error);
       }
@@ -56,17 +60,46 @@ const WriteExam = () => {
     });
     setView("result");
   };
+  const startTimer = () => {
+    let totalSeconds = examsData.duration;
+    const intervalId = setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds = totalSeconds - 1;
+        setSecondsLeft(totalSeconds);
+      } else {
+        clearInterval(intervalId);
+        setTimeUp(true);
+      }
+      setIntervalId(intervalId);
+    }, 1000);
+  };
+  useEffect(() => {
+    if (timeUp) {
+      clearInterval(intervalId);
+      calculateResult();
+    }
+  }, [timeUp]);
   return (
     <div>
       {examsData && <h1 className="text-center">{examsData?.name}</h1>}
       {view === "instructions" && (
-        <Instructions examsData={examsData} setView={setView} />
+        <Instructions
+          examsData={examsData}
+          setView={setView}
+          startTimer={startTimer}
+        />
       )}
       {view === "questions" && (
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl">
-            {selectedQuesitonIndex + 1}:{questions[selectedQuesitonIndex]?.name}
-          </h1>
+          <div className="flex justify-between">
+            <h1 className="text-2xl">
+              {selectedQuesitonIndex + 1}:
+              {questions[selectedQuesitonIndex]?.name}
+            </h1>
+            <div className="timer">
+              <span className="text-2xl">{secondsLeft}</span>
+            </div>
+          </div>
           <div className="flex flex-col gap-2">
             {Object.keys(questions[selectedQuesitonIndex].options).map(
               (option, index) => {
@@ -117,7 +150,11 @@ const WriteExam = () => {
           {selectedQuesitonIndex === questions.length - 1 && (
             <button
               className="primary-contained-btn"
-              onClick={() => calculateResult()}
+              onClick={() => {
+                setTimeUp(true);
+                clearInterval(intervalId);
+                calculateResult();
+              }}
             >
               Submit
             </button>

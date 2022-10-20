@@ -1,6 +1,6 @@
 import React from "react";
 
-const Instructions = ({ examsData, setView }) => {
+const Instructions = ({ examsData, setView, startTimer }) => {
   return (
     <div className="flex flex-col items-center">
       <ul className="flex flex-col gap-1">
@@ -14,6 +14,7 @@ const Instructions = ({ examsData, setView }) => {
       <button
         className="primary-outlined-btn"
         onClick={() => {
+          startTimer();
           setView("questions");
         }}
       >

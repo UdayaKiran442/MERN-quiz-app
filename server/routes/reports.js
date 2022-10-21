@@ -21,7 +21,7 @@ router.post("/add-report", authMiddleware, async (req, res) => {
 
 router.post("/get-all-reports", authMiddleware, async (req, res) => {
   try {
-    const reports = await Report.find({});
+    const reports = await Report.find({}).populate("exam").populate("user");
 
     return res.json(200, {
       message: "Report fetched succesfully",

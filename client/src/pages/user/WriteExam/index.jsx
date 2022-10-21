@@ -1,10 +1,11 @@
 import { message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getExamById } from "../../../api/exam";
 import { hideLoading, showLoading } from "../../../redux/loaderSlice";
 import Instructions from "./Instructions";
+import { addReport } from "../../../api/reports";
 
 const WriteExam = () => {
   const [examsData, setExamData] = useState(null);
@@ -16,6 +17,7 @@ const WriteExam = () => {
   const [timeUp, setTimeUp] = useState(false);
   const [result, setResult] = useState({});
   const [intervalId, setIntervalId] = useState(null);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
@@ -39,26 +41,43 @@ const WriteExam = () => {
   useEffect(() => {
     if (params.id) getExamData();
   }, []);
-  const calculateResult = () => {
-    let correctAnswers = [];
-    let wrongAnswers = [];
-    questions.forEach((question, index) => {
-      if (question.correctOption === selectedOptions[index]) {
-        correctAnswers.push(question);
-      } else {
-        wrongAnswers.push(question);
+  const calculateResult = async () => {
+    try {
+      let correctAnswers = [];
+      let wrongAnswers = [];
+      questions.forEach((question, index) => {
+        if (question.correctOption === selectedOptions[index]) {
+          correctAnswers.push(question);
+        } else {
+          wrongAnswers.push(question);
+        }
+      });
+      let verdict = "Pass";
+      if (correctAnswers.length < examsData.passingMarks) {
+        verdict = "Fail";
       }
-    });
-    let verdict = "Pass";
-    if (correctAnswers.length < examsData.passingMarks) {
-      verdict = "Fail";
+      const tempResult = {
+        correctAnswers,
+        wrongAnswers,
+        verdict,
+      };
+      setResult(tempResult);
+      dispatch(showLoading());
+      const response = await addReport({
+        exam: params.id,
+        result: tempResult,
+        user: user._id,
+      });
+      dispatch(hideLoading());
+      if (response.success) {
+        setView("result");
+      } else {
+        message.error(response.error);
+      }
+    } catch (error) {
+      dispatch(hideLoading());
+      message.error(error.message);
     }
-    setResult({
-      correctAnswers,
-      wrongAnswers,
-      verdict,
-    });
-    setView("result");
   };
   const startTimer = () => {
     let totalSeconds = examsData.duration;
@@ -153,7 +172,6 @@ const WriteExam = () => {
               onClick={() => {
                 setTimeUp(true);
                 clearInterval(intervalId);
-                calculateResult();
               }}
             >
               Submit

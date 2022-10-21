@@ -21,9 +21,9 @@ const ProtectedRoute = ({ children }) => {
     },
     {
       title: "Reports",
-      paths: ["/reports"],
+      paths: ["/user/reports"],
       icon: <span class="material-symbols-outlined">monitoring</span>,
-      onClick: () => navigate("/reports"),
+      onClick: () => navigate("/user/reports"),
     },
     {
       title: "Profile",

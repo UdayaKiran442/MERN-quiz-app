@@ -36,9 +36,11 @@ router.post("/get-all-reports", authMiddleware, async (req, res) => {
   }
 });
 
-router.post("/get-all-attempts-by-user", authMiddleware, async (req, res) => {
+router.post("/get-all-reports-by-user", authMiddleware, async (req, res) => {
   try {
-    const reports = await Report.find({ user: req.body.userId });
+    const reports = await Report.find({ user: req.body.userId })
+      .populate("exam")
+      .populate("user");
     return res.json(200, {
       message: "Report fetched succesfully",
       success: true,

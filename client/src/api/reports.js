@@ -18,12 +18,9 @@ export const getAllReports = async () => {
   }
 };
 
-export const getAllReportsByUser = async (payload) => {
+export const getAllReportsByUser = async () => {
   try {
-    const response = await apiInstance.post(
-      "/reports/get-all-attempts-by-user",
-      payload
-    );
+    const response = await apiInstance.post("/reports/get-all-reports-by-user");
     return response.data;
   } catch (error) {
     return error.response.data;

@@ -3,7 +3,7 @@ const app = express();
 require("dotenv").config();
 const cors = require("cors");
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://mongo_db/mern-quiz-app-db");
+mongoose.connect("mongodb://mongo:27017/mern-quiz-app-db");
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Error in connecting database"));
 db.once("open", () => console.log("Connected to database"));

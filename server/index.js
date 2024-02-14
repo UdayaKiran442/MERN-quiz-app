@@ -13,6 +13,6 @@ app.use("/api/users", require("./routes/user"));
 app.use("/api/exams", require("./routes/exam"));
 app.use("/api/reports", require("./routes/reports"));
 const port = process.env.PORT;
-app.listen(port, () => {
+app.listen(3001, () => {
   console.log("Server listening on port", port);
 });
